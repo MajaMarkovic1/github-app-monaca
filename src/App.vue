@@ -13,15 +13,13 @@
 
       <app-search :query.sync="query" />
 
-      <v-ons-list-header class="header">
-        Repositories of {{ this.query }}
-      </v-ons-list-header>
-
-      <v-ons-list v-if="repos" v-for="repo in repos" :key="repo.id" >
-        <v-ons-list-item>
+      <v-ons-list >
+        <v-ons-list-header class="header">
+          Repositories of {{ this.query }}
+        </v-ons-list-header>
+        <v-ons-list-item v-if="repos" v-for="repo in repos" :key="repo.id">
             <div class="left">
               <img class="list-item__thumbnail" :src="repo.owner.avatar_url">
-              
             </div>
             <span class="list-item__title">{{ repo.name }}</span>
             <span class="list-item__subtitle">{{ repo.description }}</span>
