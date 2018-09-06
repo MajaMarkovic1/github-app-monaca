@@ -8,11 +8,11 @@
         </v-ons-button>
       </template>
     </app-toolbar>
-<div>
-    <app-search :query.sync="query" />
+    <div class="container">
+      <app-search :query.sync="query" />
       <div v-for="repo in repos" :key="repo.id">
-      {{ repo.name }}
-    </div>
+        {{ repo.name }}
+      </div>
     </div>
 
     
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce'
 import AppToolbar from './components/AppToolbar'
 import AppSearch from './components/AppSearch'
 import { githubService } from './services/Github'
@@ -42,19 +43,27 @@ export default {
     }
   },
 
-  created() {
-    githubService.getRepos(this.query)
-      .then((response) => {
-        this.repos = response.data
-      })
-      .catch(err => console.log(this.error = err.response.data))
-  },
-
   watch: {
-    query(newValue) {
-      console.log(newValue)
-    }
+    query: debounce(function(newValue) {
+      githubService.getRepos(newValue)
+        .then((response) => {
+          this.repos = response.data
+          console.log(this.repos)
+        })
+    }, 500)
+    
   }
   
 }
 </script>
+
+<style>
+
+.container{
+  margin: 0 auto;
+  width: 80%;
+  padding: 10px;
+}
+
+</style>
+
