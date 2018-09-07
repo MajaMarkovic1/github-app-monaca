@@ -17,6 +17,11 @@
         <v-ons-list-header class="header">
           Repositories of {{ this.query }}
         </v-ons-list-header>
+        <p>
+          <v-ons-progress-circular indeterminate v-if="loading"></v-ons-progress-circular>
+        </p>
+        
+      
         <v-ons-list-item v-if="repos" v-for="repo in repos" :key="repo.id">
             <div class="left">
               <img class="list-item__thumbnail" :src="repo.owner.avatar_url">
@@ -49,21 +54,26 @@ export default {
     return {
       query: '',
       repos: [],
-      error: ''
+      error: '',
+      loading: false,
     }
   },
 
   watch: {
     query: debounce(function(newValue) {
+      this.loading = true
       githubService.getRepos(newValue)
         .then((response) => {
           this.repos = response.data
-          console.log(this.repos)
+          //console.log(this.repos)
         })
         .catch(err => console.log(err))
-    }, 500)
+        .finally(() => {
+          this.loading = false
+        })
+    }, 1000)
     
-  }
+  },
   
 }
 </script>
@@ -72,7 +82,7 @@ export default {
 
 .container{
   margin: 0 auto;
-  width: 80%;
+  width: 90%;
   padding: 10px;
 }
 
