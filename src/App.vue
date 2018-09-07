@@ -20,6 +20,7 @@
         <p>
           <v-ons-progress-circular indeterminate v-if="loading"></v-ons-progress-circular>
         </p>
+        <empty-state v-if="repos.length <= 0 && query !== ''" :type="'repo'"/>
         
       
         <v-ons-list-item v-if="repos" v-for="repo in repos" :key="repo.id">
@@ -41,13 +42,15 @@ import debounce from 'lodash/debounce'
 import AppToolbar from './components/AppToolbar'
 import AppSearch from './components/AppSearch'
 import { githubService } from './services/Github'
+import EmptyState from './components/EmptyState'
 
 
 export default {
 
   components: {
     AppToolbar,
-    AppSearch
+    AppSearch,
+    EmptyState
   },
 
   data() {
@@ -55,7 +58,7 @@ export default {
       query: '',
       repos: [],
       error: '',
-      loading: false,
+      loading: false
     }
   },
 
