@@ -82,7 +82,7 @@ export default {
             if (err.response.status === 404){
               this.notFound = true 
             }
-            console.log(err)
+            console.log(err.response)
           })
           .finally(() => {
             this.loading = false

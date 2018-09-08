@@ -12,6 +12,16 @@
                 <span class="list-item__title">Following: {{ user.following }}</span>
             </v-ons-list-item>
         </v-ons-list>
+        <div class="notes">
+            <div>
+                <v-ons-input placeholder="Add a note" v-model="note.text"></v-ons-input>
+                <v-ons-button @click="addNote" modifier="outline" style="margin: 6px 0">Add note</v-ons-button>
+            </div>
+            Notes:
+            <v-ons-list>
+                <v-ons-list-item v-for="note in notes" :key="note.id">{{ note.text }}</v-ons-list-item>
+            </v-ons-list>
+        </div>
     </v-ons-page>
 </template>
 
@@ -21,7 +31,12 @@ import { githubService } from '../services/Github';
 export default {
     data(){
         return {
-            user: {}
+            user: {},
+            note: {
+                text: '',
+                user_id: ''
+            },
+            notes: []
         }
     },
 
@@ -33,9 +48,35 @@ export default {
         githubService.getUser(this.username)
             .then((response) => {
                 this.user = response.data
+                this.note.user_id = this.user.id
+
+                if (localStorage.getItem('notes')){
+                    this.notes = JSON.parse(localStorage.getItem('notes')).filter(note => note.user_id === this.user.id)
+                }
             })
             .catch(err => console.log(err))
+    },
+
+    methods: {
+        addNote () {
+            this.notes.push(Object.assign({}, this.note))
+            localStorage.setItem('notes', JSON.stringify(this.notes))
+            this.user = Object.assign({notes: this.notes}, this.user)
+            console.log(this.note)
+            console.log(this.user)
+            
+        }
     }
 }
 </script>
+
+<style>
+.notes {
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 80%;
+}
+
+</style>
+
 
