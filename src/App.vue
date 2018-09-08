@@ -13,9 +13,9 @@
     <div class="container">
 
       <v-ons-navigator
-      :page-stack="pageStack">
-
-      </v-ons-navigator>
+      :page-stack="pageStack"
+      @view-profile="pageStack.push($event)"
+      ></v-ons-navigator>
     
     </div>
 
@@ -27,17 +27,16 @@
 import AppToolbar from './components/AppToolbar'
 import ReposList from './components/ReposList'
 
-
 export default {
 
   components: {
     AppToolbar,
-    ReposList
+    ReposList,
   },
 
   data() {
     return {
-      pageStack: [ReposList]
+      pageStack: [ ReposList ]
     }
   },
   
